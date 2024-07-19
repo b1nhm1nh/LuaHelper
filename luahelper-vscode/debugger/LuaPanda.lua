@@ -5,44 +5,44 @@
 -- Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 -- API:
---     LuaPanda.printToVSCode(logStr, printLevel, type)
---         打印日志到VSCode Output下 LuaPanda Debugger 中
---         @printLevel: debug(0)/info(1)/error(2) 这里的日志等级需高于launch.json中配置等级日志才能输出 (可选参数，默认0)
---         @type(可选参数，默认0): 0:VSCode output console  1:VSCode tip  2:VSCode debug console
+--LuaPanda.printToVSCode(logStr, printLevel, type)
+--Print logs to LuaPanda Debugger under VSCode Output
+--@printLevel: debug(0)/info(1)/error(2) The log level here must be higher than the level configured in launch.json before the log can be output (optional parameter, default 0)
+--@type (optional parameter, default 0): 0:VSCode output console 1:VSCode tip 2:VSCode debug console
 
---     LuaPanda.BP()
---         强制打断点，可以在协程中使用。建议使用以下写法:
---         local ret = LuaPanda and LuaPanda.BP and LuaPanda.BP();
---         如果成功加入断点ret返回true，否则是nil
+--LuaPanda.BP()
+--Forced break point, which can be used in coroutines. It is recommended to use the following writing method:
+--local ret = LuaPanda and LuaPanda.BP and LuaPanda.BP();
+--If the breakpoint is successfully added, ret returns true, otherwise it is nil.
 
---     LuaPanda.getInfo()
---         返回获取调试器信息。包括版本号，是否使用lib库，系统是否支持loadstring(load方法)。返回值类型string, 推荐在调试控制台中使用。
+--LuaPanda.getInfo()
+--Return to get debugger information. Including the version number, whether to use the lib library, and whether the system supports loadstring (load method). Return value type string, recommended for use in debugging console.
 
---     LuaPanda.testBreakpoint()
---         测试断点，用于分析路径错误导致断点无法停止的情况。测试方法是
---         1. launch.json 中开启 stopOnEntry, 或者在代码中加入LuaPanda.BP()。
---         2. 运行调试器和 lua 进程，当停止在 stopOnEntry 或者 LuaPanda.BP() 时在调试控制台输入 LuaPanda.testBreakpoint()
---         3. 根据提示更新断点后再次输入 LuaPanda.testBreakpoint()。此时系统会输出一些提示，帮助用户分析断点可能无法停止的原因。
+--LuaPanda.testBreakpoint()
+--Test breakpoints, used to analyze situations where path errors lead to breakpoints that cannot be stopped. The test method is
+--1. Enable stopOnEntry in launch.json, or add LuaPanda.BP() to the code.
+--2. Run the debugger and lua process. When stopping at stopOnEntry or LuaPanda.BP(), enter LuaPanda.testBreakpoint() in the debugging console.
+--3. Update the breakpoint according to the prompts and enter LuaPanda.testBreakpoint() again. At this time, the system will output some prompts to help the user analyze why the breakpoint may not be able to stop.
 
---     LuaPanda.doctor()
---         返回对当前环境的诊断信息，提示可能存在的问题。返回值类型string, 推荐在调试控制台中使用。
+--LuaPanda.doctor()
+--Return diagnostic information about the current environment and indicate possible problems. Return value type string, recommended for use in debugging console.
 
---     LuaPanda.getBreaks()
---         获取断点信息，推荐在调试控制台中使用。
+--LuaPanda.getBreaks()
+--Get breakpoint information, recommended for use in the debugging console.
 
---     LuaPanda.serializeTable(table)
---         把table序列化为字符串，返回值类型是string。
+--LuaPanda.serializeTable(table)
+--Serialize the table into a string, and the return value type is string.
 
---     LuaPanda.stopAttach()
---         断开连接，停止attach，本次被调试程序运行过程无法再次进行attach连接。
+--LuaPanda.stopAttach()
+--Disconnect and stop attach. The debugged program cannot be attached again during the running process.
 
--- 其他说明：
---     关于真机调试，首次使用真机调试时要注意下方"用户设置项"中的配置
---         1. 确定 attach 开关打开: openAttachMode = true; 这样可以避免先启动手机app之后启动调试器无法连接。
---         2. 把连接时间放长: connectTimeoutSec 设置为 0.5 或者 1。首次尝试真机调试时这个值可以设置大一点，之后再根据自己的网络状况向下调整。
---         调试方法可以参考 github 文档
+--other instructions:
+--Regarding real machine debugging, when using real machine debugging for the first time, please pay attention to the configuration in the "User Settings" below.
+--1. Make sure the attach switch is turned on: openAttachMode = true; This can prevent the debugger from being unable to connect after starting the mobile app first.
+--2. Extend the connection time: set connectTimeoutSec to 0.5 or 1. When trying real machine debugging for the first time, this value can be set larger, and then adjusted downward according to your own network conditions.
+--For debugging methods, please refer to the github documentation
 
---用户设置项
+--User setting items
 local openAttachMode = true;            --是否开启attach模式。attach模式开启后可以在任意时刻启动vscode连接调试。缺点是没有连接调试时也会略降低lua执行效率(会不断进行attach请求)
 local attachInterval = 1;               --attach间隔时间(s)
 local connectTimeoutSec = 0.005;       --lua进程作为Client时, 连接超时时间, 单位s. 时间过长等待attach时会造成卡顿，时间过短可能无法连接。建议值0.005 - 0.05
@@ -192,7 +192,7 @@ function this.startServer(host, port)
     luaProcessAsServer = true;
     this.printToConsole("Debugger start as SERVER. bind host:" .. host .. " port:".. tostring(port), 1);
     if sock ~= nil then
-        this.printToConsole("[Warning] 调试器已经启动，请不要再次调用start()" , 1);
+        this.printToConsole("[Warning] The debugger has been started, please do not call start() again" , 1);
         return;
     end
 
@@ -226,7 +226,7 @@ function this.start(host, port)
     port = tonumber(port) or 8818;
     this.printToConsole("Debugger start as CLIENT. connect host:" .. host .. " port:".. tostring(port), 1);
     if sock ~= nil then
-        this.printToConsole("[Warning] 调试器已经启动，请不要再次调用start()" , 1);
+        this.printToConsole("[Warning] The debugger has been started, please do not call start() again" , 1);
         return;
     end
 
@@ -297,7 +297,7 @@ function this.connectSuccess()
     end
 
     if ret == false then
-        this.printToVSCode("[debugger error]初始化未完成, 建立连接但接收初始化消息失败。请更换端口重试", 2);
+        this.printToVSCode("[debugger error]Initialization is not completed, the connection was established but failed to receive the initialization message. Please change the port and try again", 2);
         return;
     end
     this.printToVSCode("debugger init success", 1);
@@ -393,10 +393,10 @@ function this.testBreakpoint()
         return this.breakpointTestInfo();    
     else
         local strTable = {};
-        strTable[#strTable + 1] = "正在准备进行断点测试，请按照如下步骤操作\n"
-        strTable[#strTable + 1] = "1. 请[删除]当前项目中所有断点;\n"
-        strTable[#strTable + 1] = "2. 在当前停止行打一个断点;\n"
-        strTable[#strTable + 1] = "3. 再次运行 'LuaPanda.testBreakpoint()'"
+        strTable[#strTable + 1] = "Preparing for breakpoint testing, please follow the steps below\n"
+        strTable[#strTable + 1] = "1. Please [delete] all breakpoints in the current project;\n"
+        strTable[#strTable + 1] = "2. Make a breakpoint at the current stop line;\n"
+        strTable[#strTable + 1] = "3. Run 'LuaPanda.testBreakpoint()'"
         testBreakpointFlag = true;
         
         return table.concat(strTable);
@@ -435,31 +435,31 @@ function this.breakpointTestInfo()
 
     if not autoPathMode then
         if isAbsolutePath then
-            strTable[#strTable + 1] = "\n说明:从lua虚拟机获取到的是绝对路径，Formated使用GetInfo路径。" .. winDiskSymbolTip;
+            strTable[#strTable + 1] = "\nNote: The absolute path obtained from the Lua virtual machine is formatted using the get info path." .. winDiskSymbolTip;
         else
-            strTable[#strTable + 1] = "\n说明:从lua虚拟机获取到的路径(GetInfo)是相对路径，调试器运行依赖的绝对路径(Formated)是来源于cwd+GetInfo拼接。如Formated路径错误请尝试调整cwd或改变VSCode打开文件夹的位置。也可以在Formated对应的文件下打一个断点，调整直到Formated和Breaks Info中断点路径完全一致。" .. winDiskSymbolTip;
+            strTable[#strTable + 1] = "\nNote: The path (GetInfo) obtained from the Lua virtual machine is a relative path, and the absolute path (Formated) that the debugger depends on is derived from the splicing of cwd+GetInfo. If the Formated path is wrong, please try adjusting cwd or changing the location of the folder opened by VSCode. You can also set a breakpoint under the file corresponding to Formated and adjust until the breakpoint paths of Formated and Breaks Info are exactly the same." .. winDiskSymbolTip;
         end
     else
-        strTable[#strTable + 1] = "\n说明:自动路径(autoPathMode)模式已开启。";
+        strTable[#strTable + 1] = "\nExplanation: The auto path mode is turned on.";
         if recordBreakPointPath and recordBreakPointPath ~= "" then
             if string.find(recordBreakPointPath , FormatedPath, (-1) * string.len(FormatedPath) , true) then
                 -- 短路径断点命中
                 if distinguishSameNameFile == false then
-                    strTable[#strTable + 1] = "本文件中断点可正常命中。"
-                    strTable[#strTable + 1] = "同名文件中的断点识别(distinguishSameNameFile) 未开启，请确保 VSCode 断点不要存在于同名 lua 文件中。";
+                    strTable[#strTable + 1] = "The break point of this file can be hit normally."
+                    strTable[#strTable + 1] = "Distinguishing breakpoints in files with the same name (distinguishSameNameFile) is not enabled. Please ensure that VSCode breakpoints do not exist in the Lua file with the same name.";
                 else
-                    strTable[#strTable + 1] = "同名文件中的断点识别(distinguishSameNameFile) 已开启。";
+                    strTable[#strTable + 1] = "Distinguishing breakpoints in files with the same name (distinguishSameNameFile) is turned on.";
                     if string.find(recordBreakPointPath, NormalizedPath, 1, true) then
-                        strTable[#strTable + 1] = "本文件中断点可被正常命中"
+                        strTable[#strTable + 1] = "The breakpoint in this file can be hit normally"
                     else
-                        strTable[#strTable + 1] = "断点可能无法被命中，因为 lua 虚拟机中获得的路径 Normalized 不是断点路径 Breakpoint 的子串。 如有需要，可以在 launch.json 中设置 truncatedOPath 来去除 Normalized 部分路径。"
+                        strTable[#strTable + 1] = "The breakpoint may not be hit because the path Normalized obtained in the Lua virtual machine is not a substring of the breakpoint path Breakpoint. If necessary, you can set truncatedOPath in launch.json to remove the Normalized part of the path."
                     end
                 end
             else
-                strTable[#strTable + 1] = "断点未被命中，原因是 Formated 不是 Breakpoint 路径的子串，或者 Formated 和 Breakpoint 文件后缀不一致"
+                strTable[#strTable + 1] = "The breakpoint was not hit because Formated is not a substring of the Breakpoint path, or the Formated and Breakpoint file suffixes are inconsistent"
             end
         else
-            strTable[#strTable + 1] = "如果要进行断点测试，请使用 LuaPanda.testBreakpoint()。"
+            strTable[#strTable + 1] = "If you want to do breakpoint testing, use LuaPanda.testBreakpoint(). "
         end
     end
     return table.concat(strTable)
@@ -479,9 +479,9 @@ function this.getBaseInfo()
         local clibVer, forluaVer = hookLib.sync_getLibVersion();
         local clibStr = forluaVer ~= nil and tostring(clibVer) .. " for " .. tostring(math.ceil(forluaVer)) or tostring(clibVer);
         strTable[#strTable + 1] = " | hookLib Ver:" .. clibStr;
-        moreInfoStr = moreInfoStr .. "说明: 已加载 libpdebug 库.";
+        moreInfoStr = moreInfoStr .. "Explanation: The libpdebug library has been loaded.";
     else
-        moreInfoStr = moreInfoStr .. "说明: 未能加载 libpdebug 库。原因请使用 LuaPanda.doctor() 查看";
+        moreInfoStr = moreInfoStr .. "Explanation: Failed to load libpdebug library. Please use LuaPanda.doctor() to view the reason.";
     end
 
     local outputIsUseLoadstring = false
@@ -505,9 +505,9 @@ end
 function this.doctor()
     local strTable = {};
     if debuggerVer ~= adapterVer then
-        strTable[#strTable + 1] = "\n- 建议更新版本\nLuaPanda VSCode插件版本是" ..  adapterVer .. ", LuaPanda.lua文件版本是" ..  debuggerVer .. "。建议检查并更新到最新版本。";
-        strTable[#strTable + 1] = "\n更新方式   : https://github.com/Tencent/LuaPanda/blob/master/Docs/Manual/update.md";
-        strTable[#strTable + 1] = "\nRelease版本: https://github.com/Tencent/LuaPanda/releases";
+        strTable[#strTable + 1] = "\n- It is recommended to update the version\nThe LuaPanda VSCode plug-in version is" ..  adapterVer .. ", The LuaPanda.lua file version is " .. debuggerVer .. ". It is recommended to check and update to the latest version.";
+        strTable[#strTable + 1] = "\nUpdate method: https://github.com/Tencent/LuaPanda/blob/master/Docs/Manual/update.md";
+        strTable[#strTable + 1] = "\nRelease version: https://github.com/Tencent/LuaPanda/releases";
     end
     --plibdebug
     if hookLib == nil then
@@ -516,11 +516,11 @@ function this.doctor()
             --用户允许使用clib插件
             if isUserSetClibPath == true then
                 --用户自设了clib地址
-                strTable[#strTable + 1] = "用户使用 LuaPanda.lua 中 clibPath 变量指定了 plibdebug 的位置: " .. clibPath;
+                strTable[#strTable + 1] = "The user specifies the location of plibdebug using the clibPath variable in LuaPanda.lua: " .. clibPath;
                 if this.tryRequireClib("libpdebug", clibPath) then
-                    strTable[#strTable + 1] = "\n引用成功";
+                    strTable[#strTable + 1] = "\nQuote successfully";
                 else
-                    strTable[#strTable + 1] = "\n引用错误:" .. loadclibErrReason;
+                    strTable[#strTable + 1] = "\nCitation error:" .. loadclibErrReason;
                 end
             else
                 --使用默认clib地址
@@ -537,21 +537,21 @@ function this.doctor()
                 local x86Path = clibPath .. platform .."/x86/".. lua_ver .. clibExt;
                 local x64Path = clibPath .. platform .."/x86_64/".. lua_ver .. clibExt;
 
-                strTable[#strTable + 1] = "尝试引用x64库: ".. x64Path;
+                strTable[#strTable + 1] = "Try to reference the x64 library: ".. x64Path;
                 if this.tryRequireClib("libpdebug", x64Path) then
-                    strTable[#strTable + 1] = "\n引用成功";
+                    strTable[#strTable + 1] = "\nQuote successfully";
                 else
-                    strTable[#strTable + 1] = "\n引用错误:" .. loadclibErrReason;
-                    strTable[#strTable + 1] = "\n尝试引用x86库: ".. x86Path;
+                    strTable[#strTable + 1] = "\nCitation error:" .. loadclibErrReason;
+                    strTable[#strTable + 1] = "\nTry to reference the x86 library: ".. x86Path;
                     if this.tryRequireClib("libpdebug", x86Path) then
-                        strTable[#strTable + 1] = "\n引用成功";
+                        strTable[#strTable + 1] = "\nQuote successfully";
                     else
-                        strTable[#strTable + 1] = "\n引用错误:" .. loadclibErrReason;
+                        strTable[#strTable + 1] = "\nCitation error:" .. loadclibErrReason;
                     end
                 end
             end
         else
-            strTable[#strTable + 1] = "原因是" .. loadclibErrReason;
+            strTable[#strTable + 1] = "Because" .. loadclibErrReason;
         end
     end
 
@@ -568,7 +568,7 @@ function this.doctor()
         -- 读文件
         local isFileExist = this.fileExists(runSource);
         if not isFileExist then
-            strTable[#strTable + 1] = "\n\n- 路径存在问题\n";
+            strTable[#strTable + 1] = "\n\n- There is a problem with the path\n";
             --解析路径，得到文件名，到断点路径中查这个文件名
             local pathArray = this.stringSplit(runSource, '/');
             --如果pathArray和断点能匹配上
@@ -581,34 +581,34 @@ function this.doctor()
                     strTable[#strTable + 1] = this.breakpointTestInfo();
                     strTable[#strTable + 1] = "\nfilepath: " .. key;
                     if isAbsolutePath then
-                        strTable[#strTable + 1] = "\n说明:从lua虚拟机获取到的是绝对路径，format使用getinfo路径。";
+                        strTable[#strTable + 1] = "\nNote: The absolute path is obtained from the Lua virtual machine, and the format uses the getinfo path.";
                     else
-                        strTable[#strTable + 1] = "\n说明:从lua虚拟机获取到的是相对路径，调试器运行依赖的绝对路径(format)是来源于cwd+getinfo拼接。";
+                        strTable[#strTable + 1] = "\nNote: The relative path obtained from the Lua virtual machine is a relative path, and the absolute path (format) that the debugger depends on is derived from cwd+getinfo splicing.";
                     end
-                    strTable[#strTable + 1] = "\nfilepath是VSCode通过获取到的文件正确路径 , 对比format和filepath，调整launch.json中CWD，或改变VSCode打开文件夹的位置。使format和filepath一致即可。\n如果format和filepath路径仅大小写不一致，设置launch.json中 pathCaseSensitivity:false 可忽略路径大小写";
+                    strTable[#strTable + 1] = "\nFilepath is the correct path of the file obtained by VSCode. Compare format and filepath, adjust the CWD in launch.json, or change the location of the folder opened by VSCode. Just make format and filepath consistent. \nIf the format and filepath paths are only inconsistent in case, set pathCaseSensitivity:false in launch.json to ignore the path case.";
                 end
             end
 
             if fileMatch == false then
                  --未能和断点匹配
-                 strTable[#strTable + 1] = "\n找不到文件:"  .. runSource .. ", 请检查路径是否正确。\n或者在VSCode文件" .. pathArray[#pathArray] .. "中打一个断点后，再执行一次doctor命令，查看路径分析结果。";
+                 strTable[#strTable + 1] = "\nFile not found: " .. runSource .. ", please check if the path is correct. \nOr after setting a breakpoint in the VSCode file ".. pathArray[#pathArray] ..", execute the doctor command again to view the path analysis results.";
             end
         end
     end
 
     --日志等级对性能的影响
     if logLevel < 1 or consoleLogLevel < 1 then
-        strTable[#strTable + 1] = "\n\n- 日志等级\n";
+        strTable[#strTable + 1] = "\n\n- Log level\n";
         if logLevel < 1 then
-            strTable[#strTable + 1] = "当前日志等级是" ..  logLevel .. ", 会产生大量日志，降低调试速度。建议调整launch.json中logLevel:1";
+            strTable[#strTable + 1] = "The current log level is" ..  logLevel .. ", will generate a large number of logs and reduce debugging speed. It is recommended to adjust logLevel:1 in launch.json";
         end
         if consoleLogLevel < 1 then
-            strTable[#strTable + 1] = "当前console日志等级是" ..  consoleLogLevel .. ", 过低的日志等级会降低调试速度，建议调整LuaPanda.lua文件头部consoleLogLevel=2";
+            strTable[#strTable + 1] = "The current console log level is" ..  consoleLogLevel .. ", Too low a log level will slow down debugging. It is recommended to adjust the lua panda.lua file header console log level=2";
         end
     end
     
     if #strTable == 0 then
-        strTable[#strTable + 1] = "未检测出问题";
+        strTable[#strTable + 1] = "No problem detected";
     end
     return table.concat(strTable);
 end
@@ -641,7 +641,7 @@ function this.getInfo()
     end
 
     if logLevel == 0 or consoleLogLevel == 0 then
-        strTable[#strTable + 1] = "\n说明:日志等级过低，会影响执行效率。请调整logLevel和consoleLogLevel值 >= 1";
+        strTable[#strTable + 1] = "\nNote: The log level is too low, which will affect execution efficiency. Please adjust logLevel and console LogLevel values ​​>= 1";
     end
 
     strTable[#strTable + 1] = "\n\n- Path Info: \n";
@@ -850,10 +850,10 @@ function this.genUnifiedPath(path)
     if "Windows_NT" == OSType then
         if winDiskSymbolUpper then
             newpath = newpath:gsub("^%a:", string.upper);
-            winDiskSymbolTip = "路径中Windows盘符已转为大写。"
+            winDiskSymbolTip = "The windows drive letter in the path has been converted to uppercase letters."
         else
             newpath = newpath:gsub("^%a:", string.lower);
-            winDiskSymbolTip = "路径中Windows盘符已转为小写。"
+            winDiskSymbolTip = "The windows drive letter in the path has been converted to lowercase."
         end
     end
 
@@ -1184,7 +1184,7 @@ function this.dataProcess( dataStr )
             if dataTable.info.stackId ~= nil and tonumber(dataTable.info.stackId) ~= nil and tonumber(dataTable.info.stackId) > 1 then
                 this.curStackId = tonumber(dataTable.info.stackId);
             else
-                this.printToVSCode("未能获取到堆栈层级，默认使用 this.curStackId;")
+                this.printToVSCode("Unable to obtain the stack level, the default is this.curStackId;")
             end
 
             if varRefNum < 10000 then
@@ -1304,7 +1304,7 @@ function this.dataProcess( dataStr )
                 OSType = dataTable.info.OSType;
             else
                 OSType = "Windows_NT";
-                OSTypeErrTip = "未能检测出OSType, 可能是node os库未能加载，系统使用默认设置Windows_NT"
+                OSTypeErrTip = "The OSType could not be detected. It may be that the node os library failed to load. The system uses the default setting Windows_NT."
             end
         else
             --用户自设OSType, 使用用户的设置
@@ -1318,7 +1318,7 @@ function this.dataProcess( dataStr )
                 clibPath = dataTable.info.clibPath;
             else 
                 clibPath = ""; 
-                pathErrTip = "未能正确获取libpdebug库所在位置, 可能无法加载libpdebug库。";
+                pathErrTip = "The location of the libpdebug library cannot be obtained correctly, and the libpdebug library may not be loaded.";
             end
         else
             --用户自设clibPath
@@ -1510,14 +1510,14 @@ function this.createSetValueRetTable(varName, newValue, needFindVariable, curSta
         end
 
         if setVarRet ~= false and setVarRet ~= nil then
-            local retTip = "变量 ".. varName .." 赋值成功";
+            local retTip = "Variable".. varName .." assignment successful";
             info = { success = "true", name = getVarRet[1].name , type = getVarRet[1].type , value = displayVarValue, variablesReference = tostring(getVarRet[1].variablesReference), tip = retTip};
         else
-            info = { success = "false", type = type(realVarValue), value = displayVarValue, tip = "找不到要设置的变量"};
+            info = { success = "false", type = type(realVarValue), value = displayVarValue, tip = "The variable to be set cannot be found"};
         end
 
     else
-        info = { success = "false", type = nil, value = nil, tip = "输入的值无意义"};
+        info = { success = "false", type = nil, value = nil, tip = "The value entered is meaningless"};
     end
     return info
 end
@@ -1543,13 +1543,13 @@ function this.receiveMessage( timeoutSec )
     end
 
     if sock == nil then
-        this.printToConsole("[debugger error]接收信息失败  |  reason: socket == nil", 2);
+        this.printToConsole("[debugger error]Failed to receive message  |  reason: socket == nil", 2);
         return;
     end
     local response, err = sock:receive("*l");
     if response == nil then
         if err == "closed" then
-            this.printToConsole("[debugger error]接收信息失败  |  reason:"..err, 2);
+            this.printToConsole("[debugger error]Failed to receive message  |  reason:"..err, 2);
             this.disconnect();
         end
         return false;
@@ -1637,7 +1637,7 @@ function this.getStackTable( level )
             ss.file = this.getPath(info);
             local oPathFormated = this.formatOpath(info.source) ; --从lua虚拟机获得的原始路径, 它用于帮助定位VScode端原始lua文件的位置(存在重名文件的情况)。
             ss.oPath = this.truncatedPath(oPathFormated, truncatedOPath);
-            ss.name = "文件名"; --这里要做截取
+            ss.name = "Filename"; --这里要做截取
             ss.line = tostring(info.currentline);
             --使用hookLib时，堆栈有偏移量，这里统一调用栈顶编号2
             local ssindex = functionLevel - 3;
@@ -2461,7 +2461,7 @@ end
 -- @newValue 新的值
 function this.setGlobal(varName, newValue)
     _G[varName] = newValue;
-    this.printToVSCode("[setVariable success] 已设置  _G.".. varName .. " = " .. tostring(newValue) );
+    this.printToVSCode("[setVariable success] Has been set  _G.".. varName .. " = " .. tostring(newValue) );
     return true;
 end
 
@@ -2482,10 +2482,10 @@ function this.setUpvalue(varName, newValue, stackId, tableVarName)
                     --命中
                         local setVarRet = debug.setupvalue (currentCallStack[stackId - 1 ].func, i, newValue);
                         if setVarRet == varName then
-                            this.printToConsole("[setVariable success1] 已设置 upvalue ".. varName .. " = " .. tostring(newValue) );
+                            this.printToConsole("[setVariable success1] Has been set upvalue ".. varName .. " = " .. tostring(newValue) );
                             ret = true;
                         else
-                            this.printToConsole("[setVariable error1] 未能设置 upvalue ".. varName .. " = " .. tostring(newValue).." , 返回结果: ".. tostring(setVarRet));
+                            this.printToConsole("[setVariable error1] Failed to set upvalue ".. varName .. " = " .. tostring(newValue).." , Return results: ".. tostring(setVarRet));
                         end
                         return ret;
                 end
@@ -2493,10 +2493,10 @@ function this.setUpvalue(varName, newValue, stackId, tableVarName)
                 --命中
                 local setVarRet = debug.setupvalue (currentCallStack[stackId - 1 ].func, i, newValue);
                 if setVarRet == varName then
-                    this.printToConsole("[setVariable success] 已设置 upvalue ".. varName .. " = " .. tostring(newValue) );
+                    this.printToConsole("[setVariable success] Has been set upvalue ".. varName .. " = " .. tostring(newValue) );
                     ret = true;
                 else
-                    this.printToConsole("[setVariable error] 未能设置 upvalue ".. varName .. " = " .. tostring(newValue).." , 返回结果: ".. tostring(setVarRet));
+                    this.printToConsole("[setVariable error] Failed to set upvalue ".. varName .. " = " .. tostring(newValue).." , Return results: ".. tostring(setVarRet));
                 end
                 return ret;
             end
@@ -2523,10 +2523,10 @@ function this.setLocal( varName, newValue, tableVarName, stackId)
                         --命中
                         local setVarRet = debug.setlocal(ly , layerVarTab[i].index, newValue);
                         if setVarRet == varName then
-                            this.printToConsole("[setVariable success1] 已设置 local ".. varName .. " = " .. tostring(newValue) );
+                            this.printToConsole("[setVariable success1] Has been set local ".. varName .. " = " .. tostring(newValue) );
                             ret = true;
                         else
-                            this.printToConsole("[setVariable error1] 未能设置 local ".. varName .. " = " .. tostring(newValue).." , 返回结果: ".. tostring(setVarRet));
+                            this.printToConsole("[setVariable error1] Failed to set local ".. varName .. " = " .. tostring(newValue).." , Return results: ".. tostring(setVarRet));
                         end
                         return ret;
                 end
@@ -2535,10 +2535,10 @@ function this.setLocal( varName, newValue, tableVarName, stackId)
                 local setVarRet = debug.setlocal(ly , layerVarTab[i].index, newValue);
 
                 if setVarRet == varName then
-                    this.printToConsole("[setVariable success] 已设置 local ".. varName .. " = " .. tostring(newValue) );
+                    this.printToConsole("[setVariable success] Has been set local ".. varName .. " = " .. tostring(newValue) );
                     ret = true;
                 else
-                    this.printToConsole("[setVariable error] 未能设置 local ".. varName .. " = " .. tostring(newValue) .." , 返回结果: ".. tostring(setVarRet));
+                    this.printToConsole("[setVariable error] Failed to set local ".. varName .. " = " .. tostring(newValue) .." , Return results: ".. tostring(setVarRet));
                 end
                 return ret;
             end
@@ -2557,8 +2557,8 @@ function this.setVariableValue (varName, stackId, newValue , limit)
     this.printToConsole("setVariableValue | varName:" .. tostring(varName) .. " stackId:".. tostring(stackId) .." newValue:" .. tostring(newValue) .." limit:"..tostring(limit) )
     if tostring(varName) == nil or tostring(varName) == "" then
         --赋值错误
-        this.printToConsole("[setVariable Error] 被赋值的变量名为空", 2 );
-        this.printToVSCode("[setVariable Error] 被赋值的变量名为空", 2 );
+        this.printToConsole("[setVariable Error] The assigned variable name is empty", 2 );
+        this.printToVSCode("[setVariable Error] The assigned variable name is empty", 2 );
         return false;
     end
 
@@ -2719,7 +2719,7 @@ function this.getVariableRef( refStr )
             local var = {};
             var.name = "_Metatable_";
             var.type = tostring(type(mtTab));
-            xpcall(function() var.value = "元表 "..tostring(mtTab); end , function() var.value = "元表 [value can't trans to string]" end );
+            xpcall(function() var.value = "Metatable "..tostring(mtTab); end , function() var.value = "Metatable [value can't trans to string]" end );
             var.variablesReference = variableRefIdx;
             variableRefTab[variableRefIdx] = mtTab;
             variableRefIdx = variableRefIdx + 1;
@@ -2735,7 +2735,7 @@ function this.getVariableRef( refStr )
             local var = {};
             var.name = "_Metatable_";
             var.type = tostring(type(udMtTable));
-            xpcall(function() var.value = "元表 "..tostring(udMtTable); end , function() var.value = "元表 [value can't trans to string]" end );
+            xpcall(function() var.value = "Metatable "..tostring(udMtTable); end , function() var.value = "Metatable [value can't trans to string]" end );
             var.variablesReference = variableRefIdx;
             variableRefTab[variableRefIdx] = udMtTable;
             variableRefIdx = variableRefIdx + 1;
@@ -2856,7 +2856,7 @@ function this.getVariable( checkLayer, isFormatVariable , offset)
     else  ly = this.getSpecificFunctionStackLevel(lastRunFunction.func); end
 
     if ly == 0 then
-        this.printToVSCode("[error]获取层次失败！", 2);
+        this.printToVSCode("[error]Failed to get level! ", 2);
         return;
     end
     local varTab = {};
@@ -2944,9 +2944,9 @@ function this.processExp(msgTable)
                     debug.setupvalue(f, 1, env);
                 end
                 --表达式要有错误处理
-                xpcall(function() retString = f() end , function() retString = "输入错误指令。\n + 请检查指令是否正确\n + 指令仅能在[暂停在断点时]输入, 请不要在程序持续运行时输入"; var.isSuccess = false; end)
+                xpcall(function() retString = f() end , function() retString = "Wrong command entered. \n + Please check whether the command is correct\n + The command can only be entered when [paused at breakpoint], please do not enter it while the program continues to run."; var.isSuccess = false; end)
             else
-                retString = "指令执行错误。\n + 请检查指令是否正确\n + 可以直接输入表达式，执行函数或变量名，并观察执行结果";
+                retString = "Instruction execution error. \n + Please check whether the instruction is correct\n + You can directly enter expressions, execute function or variable names, and observe the execution results";
                 var.isSuccess = false;
             end
         end
@@ -2990,9 +2990,9 @@ function this.processWatchedExp(msgTable)
         else
             debug.setupvalue(f, 1, env);
         end
-        xpcall(function() retString = f() end , function() retString = "输入了错误的变量信息"; var.isSuccess = "false"; end)
+        xpcall(function() retString = f() end , function() retString = "Incorrect variable information entered"; var.isSuccess = "false"; end)
     else
-        retString = "未能找到变量的值";
+        retString = "Unable to find value for variable";
         var.isSuccess = "false";
     end
 

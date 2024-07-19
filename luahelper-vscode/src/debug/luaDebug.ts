@@ -17,7 +17,7 @@ import * as Net from 'net';
 import { DataProcessor } from './dataProcessor';
 import { DebugLogger } from '../common/logManager';
 //import { StatusBarManager } from '../common/statusBarManager';
-import { LineBreakpoint, ConditionBreakpoint, LogPoint } from './breakpoint';
+import { LineBreakpoint, ConditionBreakpoint, LogPoint } from './breakPoint';
 import { Tools } from '../common/tools';
 //import { UpdateManager } from './updateManager';
 import { ThreadManager } from '../common/threadManager';
@@ -96,7 +96,7 @@ export class LuaDebugSession extends LoggingDebugSession {
             }else{
                 // go on running
                 this._runtime.continueWithFakeHitBk(() => {
-                    DebugLogger.AdapterInfo("命中同名文件中的断点, 确认继续运行");
+                    DebugLogger.AdapterInfo("Hit the breakpoint in the file with the same name and confirm to continue running.");
                 });
             }
         });
@@ -237,7 +237,7 @@ export class LuaDebugSession extends LoggingDebugSession {
             // 判断 args.cwd 是否存在， 如果不存在给出提示，并停止运行
             let isCWDExist = fs.existsSync(args.cwd);
             if(!isCWDExist){
-                vscode.window.showErrorMessage("[Error] launch.json 文件中 cwd 指向的路径 " + args.cwd + " 不存在，请修改后再次运行！" , "好的");
+                vscode.window.showErrorMessage("[Error] launch.json The path pointed to by cwd in the file " + args.cwd + "It does not exist, please modify it and run it again!" , "OK");
                 return;
             }
             this._pathManager.rebuildWorkspaceNamePathMap(args.cwd);
@@ -275,10 +275,10 @@ export class LuaDebugSession extends LoggingDebugSession {
         //StatusBarManager.reset();
         if(this.VSCodeAsClient){
             // VSCode = Client ; Debugger = Server
-            this.printLogInDebugConsole("[Connecting] 调试器 VSCode Client 已启动，正在尝试连接。  TargetName:" + args.name  + " Port:" + args.connectionPort );
+            this.printLogInDebugConsole("[Connecting] Debugger VSCode Client has been started and is trying to connect. TargetName:" + args.name  + " Port:" + args.connectionPort );
             this.startClient(sendArgs);
         }else{
-            this.printLogInDebugConsole("[Listening] 调试器 VSCode Server 已启动，正在等待连接。  TargetName:" + args.name  + " Port:" + args.connectionPort );
+            this.printLogInDebugConsole("[Listening] Debugger VSCode Server has started and is waiting for connection.  TargetName:" + args.name  + " Port:" + args.connectionPort );
             this.startServer(sendArgs);
         }
 
@@ -360,10 +360,10 @@ export class LuaDebugSession extends LoggingDebugSession {
                     this._programTermianl.sendText(progaamCmdwithArgs , true);
                     this._programTermianl.show(); 
                 }else{
-                    let progError = "[Warning] 配置文件 launch.json 中的 program 路径有误: \n";
-                    progError += " + program 配置项的作用是，在调试器开始运行时拉起一个可执行文件（注意不是lua文件）。";
-                    progError += "如无需此功能，建议 program 设置为 \"\" 或从 launch.json 中删除 program 项。\n";
-                    progError += " + 当前设置的 " + args.program + " 不存在或不是一个可执行文件。";
+                    let progError = "[Warning] The program path in the configuration file launch.json is incorrect: \n";
+                    progError += " + program The function of the configuration item is to pull up an executable file (note that it is not a Lua file) when the debugger starts running.";
+                    progError += "If this feature is not needed, it is recommended to set program to \"\" or delete the program item from launch.json.\n";
+                    progError += " + The currently set " + args.program + " does not exist or is not an executable file.";
                     this.printLogInDebugConsole(progError);
                 }
             }
@@ -382,10 +382,10 @@ export class LuaDebugSession extends LoggingDebugSession {
                 //_runtime.start 初始化消息发送成功之后。
                 this.connectionFlag = true;
                 this._server.close(); //_server 已建立连接，不再接受新的连接
-                let connectMessage = "[Connected] VSCode Server 已建立连接! Remote device info  " + socket.remoteAddress + ":" + socket.remotePort ;
+                let connectMessage = "[Connected] VSCode Server: Connection established! Remote device info  " + socket.remoteAddress + ":" + socket.remotePort ;
                 DebugLogger.AdapterInfo(connectMessage);
                 this.printLogInDebugConsole(connectMessage);
-                this.printLogInDebugConsole("[Tips] 当停止在断点处时，可在调试控制台输入要观察变量或执行表达式. " );
+                this.printLogInDebugConsole("[Tips] When stopping at a breakpoint, you can enter variables to observe or expressions to execute in the debug console. " );
 
                 if (info.UseLoadstring === "1") {
                     this.UseLoadstring = true;
@@ -413,7 +413,7 @@ export class LuaDebugSession extends LoggingDebugSession {
                 if( this.connectionFlag ){
                     this.connectionFlag = false;
                     DebugLogger.AdapterInfo('Socket close!');
-                    vscode.window.showInformationMessage('[LuaPanda] 调试器已断开连接');
+                    vscode.window.showInformationMessage('[LuaPanda] Debugger disconnected');
                     // this._dataProcessor._socket 是在建立连接后赋值，所以在断开连接时删除
                     delete this._dataProcessor._socket;
                     this.sendEvent(new TerminatedEvent(this.autoReconnect));
@@ -446,10 +446,10 @@ export class LuaDebugSession extends LoggingDebugSession {
 				clearInterval(instance.connectInterval);		 //连接后清除循环请求
                 instance._dataProcessor._socket = instance._client;
 				instance._runtime.start(( _ , info) => {
-                    let connectMessage = "[Connected] VSCode Client 已建立连接!";
+                    let connectMessage = "[Connected] VSCode Client Connection established!";
                     DebugLogger.AdapterInfo(connectMessage);
                     instance.printLogInDebugConsole(connectMessage);
-                    instance.printLogInDebugConsole("[Tips] 当停止在断点处时，可在调试控制台输入要观察变量或执行表达式." );
+                    instance.printLogInDebugConsole("[Tips] When stopping at a breakpoint, you can enter variables to observe or expressions to execute in the debug console." );
                     //已建立连接，并完成初始化
 					if (info.UseLoadstring === "1") {
                         instance.UseLoadstring = true;
@@ -473,7 +473,7 @@ export class LuaDebugSession extends LoggingDebugSession {
 			instance._client.on('end', () => {
                 // VScode client 主动发起断开连接
                 DebugLogger.AdapterInfo("client end");
-                vscode.window.showInformationMessage('[LuaPanda] 调试器已断开连接');
+                vscode.window.showInformationMessage('[LuaPanda] Debugger disconnected');
                 // this._dataProcessor._socket 是在建立连接后赋值，所以在断开连接时删除
                 delete instance._dataProcessor._socket;
                 instance.sendEvent(new TerminatedEvent(instance.autoReconnect));
@@ -552,7 +552,7 @@ export class LuaDebugSession extends LoggingDebugSession {
             callbackArgs.push(this);
             callbackArgs.push(response);
             this._runtime.setBreakPoint(path, vscodeBreakpoints, function (arr) {
-                DebugLogger.AdapterInfo("确认断点");
+                DebugLogger.AdapterInfo("Confirm breakpoint");
                 let ins = arr[0];
                 ins.sendResponse(arr[1]);//在收到debugger的返回后，通知VSCode, VSCode界面的断点会变成已验证
             }, callbackArgs);
@@ -607,7 +607,7 @@ export class LuaDebugSession extends LoggingDebugSession {
                 if (info.length === 0) {
                     //没有查到
                     arr[1].body = {
-                        result: '未能查到变量的值',
+                        result: 'Unable to find variable value',
                         type: 'string',
                         variablesReference: 0
                     };
@@ -696,7 +696,7 @@ export class LuaDebugSession extends LoggingDebugSession {
                 };
                 DebugLogger.showTips( info.tip );
             }else{
-                DebugLogger.showTips("变量赋值失败 [" + info.tip + "]" );
+                DebugLogger.showTips("Variable assignment failed [" + info.tip + "]" );
             }
             let ins = arr[0];
             ins.sendResponse(arr[1]);   
@@ -754,7 +754,7 @@ export class LuaDebugSession extends LoggingDebugSession {
         callbackArgs.push(this);
         callbackArgs.push(response);
         this._runtime.continue(arr => {
-            DebugLogger.AdapterInfo("确认继续运行");
+            DebugLogger.AdapterInfo("Confirm to continue running");
             let ins = arr[0];
             ins.sendResponse(arr[1]);
         }, callbackArgs);
@@ -768,7 +768,7 @@ export class LuaDebugSession extends LoggingDebugSession {
         callbackArgs.push(this);
         callbackArgs.push(response);
         this._runtime.step(arr => {
-            DebugLogger.AdapterInfo("确认单步");
+            DebugLogger.AdapterInfo("Confirm single step");
             let ins = arr[0];
             ins.sendResponse(arr[1]);
         }, callbackArgs);
@@ -782,7 +782,7 @@ export class LuaDebugSession extends LoggingDebugSession {
         callbackArgs.push(this);
         callbackArgs.push(response);
         this._runtime.step(arr => {
-            DebugLogger.AdapterInfo("确认StepIn");
+            DebugLogger.AdapterInfo("Confirm Step in");
             let ins = arr[0];
             ins.sendResponse(arr[1]);
         }, callbackArgs, 'stopOnStepIn');
@@ -796,7 +796,7 @@ export class LuaDebugSession extends LoggingDebugSession {
         callbackArgs.push(this);
         callbackArgs.push(response);
         this._runtime.step(arr => {
-            DebugLogger.AdapterInfo("确认StepOut");
+            DebugLogger.AdapterInfo("Confirm Step out");
             let ins = arr[0];
             ins.sendResponse(arr[1]);
         }, callbackArgs, 'stopOnStepOut');
@@ -810,33 +810,33 @@ export class LuaDebugSession extends LoggingDebugSession {
     }
 
     /**
-     * 断开和lua的连接
-     * 关闭连接的调用顺序 停止连接时的公共方法要放入 disconnectRequest.
-     * 未建立连接 : disconnectRequest
-     * 当VScode主动停止连接 : disconnectRequest - > socket end -> socket close
-     * 当lua进程主动停止连接 : socket end -> socket close -> disconnectRequest
+     * Disconnect from lua
+     * The calling sequence of closing the connection. The public method when stopping the connection should be placed in disconnectRequest.
+     * No connection established: disconnectRequest
+     * When VScode actively stops the connection: disconnectRequest -> socket end -> socket close
+     * When the Lua process actively stops the connection: socket end -> socket close -> disconnectRequest
      */
     protected disconnectRequest(response: DebugProtocol.DisconnectResponse, args): void {
-        let disconnectMessage = "[Disconnect Request] 调试器已断开连接.";
+        let disconnectMessage = "[Disconnect Request] The debugger has been disconnected.";
         DebugLogger.AdapterInfo(disconnectMessage);
         this.printLogInDebugConsole(disconnectMessage);
 
         let restart = args.restart;
         if(this.VSCodeAsClient){
-            clearInterval(this.connectInterval);// 在未建立连接的情况下清除循环
-            this._client.end();                 // 结束连接
+            clearInterval(this.connectInterval);// Clear loop without connection established
+            this._client.end();                 // End connection
         }else{
             // 给lua发消息，让lua client停止运行
             let callbackArgs = new Array();
             callbackArgs.push(restart);
             this._runtime.stopRun(arr => {
-                //客户端主动断开连接，这里仅做确认
+                //The client actively disconnects, only confirms here
                 DebugLogger.AdapterInfo("确认stop");
             }, callbackArgs, 'stopRun');
-            this._server.close();               // 关闭 server, 停止 listen. 放在这里的原因是即使未建立连接，也可以停止listen.
+            this._server.close();              //Close the server and stop listening. The reason for putting it here is that the list can be stopped even if the connection is not established.en.
         }
 
-        // 删除自身的线程id, 并从LuaDebugSession实例列表中删除自身
+        // Delete its own thread id and delete itself from the LuaDebugSession instance list
         this._threadManager.destructor();
         LuaDebugSession._debugSessionArray.delete(this._threadManager.CUR_THREAD_ID);
         this.sendResponse(response);

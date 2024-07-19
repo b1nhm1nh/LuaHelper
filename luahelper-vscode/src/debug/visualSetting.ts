@@ -139,10 +139,10 @@ export class VisualSetting {
                 break;
             case 'preAnalysisCpp':
                 if(!messageObj.path || messageObj.path.trim() == ''){
-                    DebugLogger.showTips("C++ 文件分析失败，传入路径为空!",2);
+                    DebugLogger.showTips("C++ File analysis failed, the incoming path is empty!",2);
                 }else{
                     if (!fs.existsSync(messageObj.path.trim())) {
-                        DebugLogger.showTips("输入了不存在的路径!", 2);
+                        DebugLogger.showTips("A non-existent path was entered!", 2);
                         return;
                     }
 
@@ -154,9 +154,9 @@ export class VisualSetting {
                 let removePath = messageObj.rootFolder + "/.vscode/LuaPanda/";
                 let res =Tools.removeDir(removePath);
                 if(res){
-                    DebugLogger.showTips("文件夹已经清除");
+                    DebugLogger.showTips("The folder has been cleared");
                 }else{
-                    DebugLogger.showTips("文件不存在", 2);
+                    DebugLogger.showTips("file does not exist", 2);
                 }
                 break;
         }
@@ -171,7 +171,7 @@ export class VisualSetting {
         if(!userControlBool){
             // 用户关闭, 清空snippets
             fs.writeFileSync(snippetsPath, '');
-            DebugLogger.showTips("您已关闭了代码辅助功能，重启VScode后将不再有代码提示!");
+            DebugLogger.showTips("You have turned off the code assistance function. After restarting v scode, there will no longer be code prompts!");
             return;
         }
 
@@ -181,7 +181,7 @@ export class VisualSetting {
                 // 读取snippetsPathBackup中的内容，写入snippets
                 fs.writeFileSync(snippetsPath, fs.readFileSync(snippetsPathBackup));
             }
-            DebugLogger.showTips("您已打开了代码辅助功能，重启VScode后将会启动代码提示!");
+            DebugLogger.showTips("You have turned on the code assistance function. Code prompts will be enabled after restarting v scode!");
             return;
         }
     }
@@ -225,9 +225,9 @@ export class VisualSetting {
             let launchJson = JSON.stringify(settings, null,  4);
             Tools.writeFileContent(rootFolder + "/.vscode/launch.json" ,launchJson);
       
-            DebugLogger.showTips("配置保存成功!");
+            DebugLogger.showTips("Configuration saved successfully!");
         } catch (error) {
-            DebugLogger.showTips("配置保存失败, 可能是由于 launch.json 文件无法写入. 请手动修改 launch.json 中的配置项来完成配置!", 2);
+            DebugLogger.showTips("The configuration failed to save, possibly because the launch.json file could not be written. Please manually modify the configuration items in launch.json to complete the configuration!", 2);
         }
     }   
 }

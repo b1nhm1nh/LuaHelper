@@ -446,7 +446,7 @@ async function copyLuaSocket() {
     let strTitle: string = "Please select the lua version to copy luasocket"
 
     if (vscode.env.language === "zh-cn" || vscode.env.language === "zh-tw") {
-        strTitle = "请选择要拷贝luasocket的lua版本";
+        strTitle = "Please select the lua version to copy luasocket from";
     }
     let selectWord = await vscode.window.showQuickPick(arr, {
         placeHolder: strTitle,

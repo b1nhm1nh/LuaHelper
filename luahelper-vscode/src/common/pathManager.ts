@@ -71,10 +71,10 @@ export class PathManager {
             }
         }
         let endMS = Tools.getCurrentMS();//文件分析结束时毫秒数
-        DebugLogger.AdapterInfo("文件Map刷新完毕，使用了" +  (endMS - beginMS) + "毫秒。检索了"+ workspaceFileCount +"个文件， 其中" + processFilNum + "个lua类型文件");
+        DebugLogger.AdapterInfo("The file Map is refreshed, using " + (endMS -beginMS) + " milliseconds. Retrieved "+ workspaceFileCount +" files, among which "+ processFilNum + "lua type files");
         if(processFilNum <= 0){
-            vscode.window.showErrorMessage("没有在工程中检索到lua文件。请检查launch.json文件中lua后缀(luaFileExtension)是否配置正确, 以及VSCode打开的工程是否正确", "确定")
-            let noLuaFileTip = "[!] 没有在VSCode打开的工程中检索到lua文件，请进行如下检查\n 1. VSCode打开的文件夹是否正确 \n 2. launch.json 文件中 luaFileExtension 选项配置是否正确"
+            vscode.window.showErrorMessage("The lua file was not retrieved in the project. Please check whether the lua suffix (luaFileExtension) in the launch.json file is configured correctly, and whether the project opened by VSCode is correct", "OK")
+            let noLuaFileTip = "[!] The lua file was not retrieved in the project opened by VSCode, please check as follows\n 1. Whether the folder opened by VSCode is correct\n 2. Whether the luaFileExtension option configuration in the launch.json file is correct"
             DebugLogger.DebuggerInfo(noLuaFileTip);
             DebugLogger.AdapterInfo(noLuaFileTip);
         }
@@ -89,7 +89,7 @@ export class PathManager {
             if(isArray(completePath)){
                 //初始化语句
                 if(sameNameFileStr === undefined){
-                    sameNameFileStr = "\nVSCode打开工程中存在以下同名lua文件: \n";
+                    sameNameFileStr = "\nThe following lua files with the same name exist in the project opened by VSCode: \n";
                 }
                 sameNameFileStr = sameNameFileStr + " + " + completePath.join("\n + ") + "\n\n"
             }
@@ -97,12 +97,12 @@ export class PathManager {
 
         if(sameNameFileStr){
             if(distinguishSameNameFile){
-                sameNameFileStr = sameNameFileStr + "distinguishSameNameFile 已开启。调试器[可以区分]同名文件中的断点。\n"
+                sameNameFileStr = sameNameFileStr + "distinguishSameNameFileTurned on. The debugger [can distinguish] breakpoints in files with the same name.\n"
             }else{
-                let sameNameFileTips = "[Tips] VSCode 打开目录中存在同名 lua 文件，请避免在这些文件中打断点。如确定需要区分同名文件中的断点，可按以下选择适合自己项目的操作:\n";
-                sameNameFileTips += "方法1: LuaPanda启动时会索引 cwd 目录中的 lua 文件, 修改 launch.json 中的 cwd 配置路径, 过滤掉不参与运行的文件夹, 缩小索引范围来避免重复文件;\n";
-                sameNameFileTips += "方法2: 在 launch.json 中加入 distinguishSameNameFile:true , 开启同名文件区分 (会采用更严格的路径校验方式区分同名文件);\n";
-                sameNameFileTips += "方法3: 同名文件信息展示在 VSCode 控制台 OUTPUT - LuaPanda Debugger 中, 也可以尝试修改文件名;\n";   
+                let sameNameFileTips = "[Tips] VSCode There are lua files with the same name in the open directory. Please avoid breakpoints in these files. If you determine that you need to distinguish breakpoints in files with the same name, you can choose the operation suitable for your project as follows:\n";
+                sameNameFileTips += "Method 1: When LuaPanda starts, it will index the lua files in the cwd directory, modify the cwd configuration path in launch.json, filter out folders that do not participate in the operation, and reduce the index range to avoid duplicate files;\n";
+                sameNameFileTips += "Method 2: Add distinguishSameNameFile:true to launch.json to enable distinction of files with the same name (more stringent path verification will be used to distinguish files with the same name);\n";
+                sameNameFileTips += "Method 3: The file information with the same name is displayed in the VSCode console OUTPUT -LuaPanda Debugger. You can also try to modify the file name;\n";
                 this.consoleLog(sameNameFileTips, this.luaDebugInstance);
             }
 
@@ -155,7 +155,7 @@ export class PathManager {
             }
         }
         //最终没有找到，返回输入的地址
-        DebugLogger.showTips("调试器没有找到文件 " + shortPath + " 。 请检查launch.json文件中lua后缀是否配置正确, 以及VSCode打开的工程是否正确", 2);
+        DebugLogger.showTips("The debugger did not find the file " + shortPath + ". Please check whether the lua suffix in the launch.json file is configured correctly, and whether the project opened by VSCode is correct", 2);
         return shortPath;
     }
 
@@ -203,9 +203,9 @@ export class PathManager {
         // 如果最终都无法命中， 默认第一条。这种情况要避免，否则二次验证也通不过
         if(Tools.developmentMode === true){
             // 开发模式下提示
-            let str = "file_name:" + fileName +  "  opath:" + oPath + "无法命中任何文件路径!"
+            let str = "file_name:" + fileName +  "  opath:" + oPath + " Cannot hit any file path!"
             DebugLogger.showTips(str);
-            let Adapterlog = "同名文件无法命中!\n";
+            let Adapterlog = "The file with the same name cannot be hit!\n";
             for (const iteratorPath of fullPathArray) {
                 Adapterlog += " + " + iteratorPath + "\n";
             }

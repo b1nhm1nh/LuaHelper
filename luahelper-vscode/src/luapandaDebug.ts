@@ -15,7 +15,7 @@ export class LuaConfigurationProvider implements vscode.DebugConfigurationProvid
         if (!config.type && !config.name) {
             const editor = vscode.window.activeTextEditor;
             if (editor && editor.document.languageId === 'lua') {
-                vscode.window.showInformationMessage('请先正确配置launch文件!');
+                vscode.window.showInformationMessage('Please configure the launch file correctly first!');
                 config.type = 'LuaHelper-Debug';
                 config.name = 'LuaHelper';
                 config.request = 'launch';

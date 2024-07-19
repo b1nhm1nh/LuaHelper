@@ -51,7 +51,7 @@ function sendRequest(statusBar: StatusBarItem, client: LanguageClient) {
                 statusBar.show();
             } else {
                 if (vscode.env.language === "zh-cn" || vscode.env.language === "zh-tw") {
-                    statusBar.text = "LuaHelper 在线人数 : " + onelineReturn.Num;
+                    statusBar.text = "LuaHelper online users : " + onelineReturn.Num;
                     statusBar.tooltip = "LuaHelper online People: " + onelineReturn.Num;
                 } else {
                     statusBar.text = "LuaHelper : " + onelineReturn.Num;

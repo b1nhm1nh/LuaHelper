@@ -90,8 +90,8 @@ export class DataProcessor {
         }
         catch(e){
             if(this.isNeedB64EncodeStr){
-                this._runtime.showError(" JSON  解析失败! " + data);
-                DebugLogger.AdapterInfo("[Adapter Error]: JSON  解析失败! " + data);
+                this._runtime.showError(" JSON  Parsing failed!" + data);
+                DebugLogger.AdapterInfo("[Adapter Error]: JSON  Parsing failed!" + data);
             }else{
                 this.getDataJsonCatch = data + "|*|";
             }
@@ -100,13 +100,13 @@ export class DataProcessor {
 
         if (this._runtime != null) {
             if (cmdInfo == null) {
-                this._runtime.showError("JSON 解析失败! no cmdInfo:" + data);
-                DebugLogger.AdapterInfo("[Adapter Error]:JSON解析失败  no cmdInfo:"+ data);
+                this._runtime.showError("JSON Parsing failed!no cmdInfo:" + data);
+                DebugLogger.AdapterInfo("[Adapter Error]:JSON parsing failed, no cmdInfo:"+ data);
                 return;
             }
             if (cmdInfo["cmd"] == undefined) {
-                this._runtime.showError("JSON 解析失败! no cmd:" + data);
-                DebugLogger.AdapterInfo("[Adapter Warning]:JSON 解析失败 no cmd:"+ data);
+                this._runtime.showError("JSON Parsing failed!no cmd:" + data);
+                DebugLogger.AdapterInfo("[Adapter Warning]:JSON  parsing failed, no cmd:"+ data);
             }
 
             if (cmdInfo["callbackId"] != undefined && cmdInfo["callbackId"] != "0") {
@@ -124,7 +124,7 @@ export class DataProcessor {
                         return;
                     }
                 }
-                DebugLogger.AdapterInfo("[Adapter Error]: 没有在列表中找到回调");
+                DebugLogger.AdapterInfo("[Adapter Error]: Callback not found in list");
             } else {
                 switch (cmdInfo["cmd"]) {
                     case "refreshLuaMemory":
