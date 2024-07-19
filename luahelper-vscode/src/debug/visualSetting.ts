@@ -171,7 +171,7 @@ export class VisualSetting {
         if(!userControlBool){
             // 用户关闭, 清空snippets
             fs.writeFileSync(snippetsPath, '');
-            DebugLogger.showTips("You have turned off the code assistance function. After restarting v scode, there will no longer be code prompts!");
+            DebugLogger.showTips("You have turned off the code assistance function. After restarting vscode, there will no longer be code prompts!");
             return;
         }
 
