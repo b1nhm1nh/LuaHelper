@@ -1,3 +1,4 @@
+# LuaHelper - With English translation
 # LuaHelper Guide
 ![logo](/docs/images/logo.png)
 ## Introduction
